@@ -1,0 +1,17 @@
+{
+  "type": "postgres",
+  "port": 5432,
+  "host": "localhost",
+  "username": "postgres",
+  "password": "ignitepro",
+  "database": "web_socket_db",
+  "migrations": [
+    "./src/database/migrations/*.ts"
+  ],
+  "entities": [
+    "./src/modules/*/infra/typeorm/entities/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/database/migrations"
+  }
+}
