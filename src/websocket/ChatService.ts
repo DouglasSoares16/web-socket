@@ -1,9 +1,10 @@
 import { container } from "tsyringe";
 import { io } from "../http";
 import { CreateUserUseCase } from "../modules/users/useCases/createUser/CreateUserUseCase";
-import { UserRepository } from "../modules/users/infra/typeorm/implementations/UserRepository";
+import { ListAllUserUseCase } from "../modules/users/useCases/listAllUser/ListAllUserUseCase";
 
 io.on("connect", (socket) => {
+  // Evento do Start
   socket.on("start", async (data) => {
     const {
       name,
@@ -12,17 +13,23 @@ io.on("connect", (socket) => {
     } = data;
 
     const createUserUseCase = container.resolve(CreateUserUseCase);
-    const userRepository = new UserRepository();
 
-    await createUserUseCase.execute({
+    const user = await createUserUseCase.execute({
       name,
       email,
       avatar,
       socket_id: socket.id,
     });
 
-    const user = await userRepository.findByEmail(email);
+    // Quando queremos enviar uma informação para todos os usuários, menos aquele usuário do 'socket' usamos o (broadcast)
+    socket.broadcast.emit("new_users", user);
+  });
 
-    console.log(user);
+  socket.on("get_users", async (callback) => {
+    const listAllUserUseCase = container.resolve(ListAllUserUseCase);
+
+    const users = await listAllUserUseCase.execute();
+
+    callback(users);
   });
 });
