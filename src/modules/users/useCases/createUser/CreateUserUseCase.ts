@@ -1,5 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
+import { User } from "../../infra/typeorm/entities/User";
 import { IUserRepository } from "../../repositories/IUserRepository";
 
 @injectable()
@@ -9,12 +10,12 @@ class CreateUserUseCase {
     private userRepository: IUserRepository
   ) {}
 
-  async execute({ name, email, avatar, socket_id }: ICreateUserDTO): Promise<void> {
+  async execute({ name, email, avatar, socket_id }: ICreateUserDTO): Promise<User> {
     const userExists = await this.userRepository.findByEmail(email);
 
     if (userExists) {
       // update user
-      await this.userRepository.create({ 
+      const userUpdated = await this.userRepository.create({ 
         id: userExists.id, 
         name, 
         email, 
@@ -22,9 +23,18 @@ class CreateUserUseCase {
         socket_id,
         created_at: userExists.created_at
        });
+
+       return userUpdated;
     }
 
-    await this.userRepository.create({ name, email, avatar, socket_id });
+    const user = await this.userRepository.create({ 
+      name, 
+      email, 
+      avatar, 
+      socket_id 
+    });
+
+    return user;
   }
 }
 
