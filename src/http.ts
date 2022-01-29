@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import "./database/connection";
+import "./shared/container";
 
 import express from "express";
 
