@@ -8,7 +8,7 @@ class ChatRoom {
   readonly id: string;
 
   @Column()
-  users_id: string;
+  users_id: string[];
 
   @ManyToMany(() => User)
   @JoinTable()
