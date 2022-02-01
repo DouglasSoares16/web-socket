@@ -10,6 +10,16 @@ class UserRepository implements IUserRepository {
     this.repository = getRepository(User);
   }
 
+  async findUserBySocket(socket_id: string): Promise<User> {
+    const user = await this.repository.findOne({
+      where: {
+        socket_id
+      }
+    });
+
+    return user;
+  };
+
   async findAll(): Promise<User[]> {
     return this.repository.find();
   }
