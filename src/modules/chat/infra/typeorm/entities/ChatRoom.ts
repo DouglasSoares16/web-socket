@@ -7,8 +7,8 @@ class ChatRoom {
   @PrimaryColumn()
   readonly id: string;
 
-  @Column({ array: true })
-  users_id: string;
+  @Column("uuid", { array: true })
+  users_id: string[];
 
   @ManyToMany(() => User)
   @JoinTable()
