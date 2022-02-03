@@ -1,9 +1,10 @@
 import { container } from "tsyringe";
 import { io } from "../http";
-import { CreateChatRoomUseCase } from "../modules/chat/useCases/createChatRoom/CreateChatRoomUseCase";
-import { CreateUserUseCase } from "../modules/users/useCases/createUser/CreateUserUseCase";
-import { FindUserBySocketIdUseCase } from "../modules/users/useCases/findUserBySocketId/FindUserBySocketIdUseCase";
-import { ListAllUserUseCase } from "../modules/users/useCases/listAllUser/ListAllUserUseCase";
+import { CreateChatRoomUseCase } from "../modules/chat/useCases/CreateChatRoomUseCase";
+import { GetChatRoomByUsersUseCase } from "../modules/chat/useCases/GetChatRoomByUsersUseCase";
+import { CreateUserUseCase } from "../modules/users/useCases/CreateUserUseCase";
+import { FindUserBySocketIdUseCase } from "../modules/users/useCases/FindUserBySocketIdUseCase";
+import { ListAllUserUseCase } from "../modules/users/useCases/ListAllUserUseCase";
 
 io.on("connect", (socket) => {
   // Evento do Start
@@ -38,13 +39,21 @@ io.on("connect", (socket) => {
   socket.on("start_chat", async (data, callback) => {
     const createChatRoomUseCase = container.resolve(CreateChatRoomUseCase);
     const findUserBySocketIdUseCase = container.resolve(FindUserBySocketIdUseCase);
+    const getChatRoomByUsers = container.resolve(GetChatRoomByUsersUseCase);
 
     const userLogged = await findUserBySocketIdUseCase.execute(socket.id);
 
-    const room = await createChatRoomUseCase.execute([
+    let room = await getChatRoomByUsers.execute([
       userLogged.id, 
       data.idUser
     ]);
+
+    if (!room) {
+      room = await createChatRoomUseCase.execute([
+        userLogged.id, 
+        data.idUser
+      ]);
+    }
 
     console.log(room);
 
