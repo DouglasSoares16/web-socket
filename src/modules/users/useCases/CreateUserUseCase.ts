@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
-import { ICreateUserDTO } from "../../dtos/ICreateUserDTO";
-import { User } from "../../infra/typeorm/entities/User";
-import { IUserRepository } from "../../repositories/IUserRepository";
+import { ICreateUserDTO } from "../dtos/ICreateUserDTO";
+import { User } from "../infra/typeorm/entities/User";
+import { IUserRepository } from "../repositories/IUserRepository";
 
 @injectable()
 class CreateUserUseCase {

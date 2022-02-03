@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { ChatRoom } from "../../infra/typeorm/entities/ChatRoom";
-import { IChatRoomRepository } from "../../repositories/IChatRoomRepository";
+import { ChatRoom } from "../infra/typeorm/entities/ChatRoom";
+import { IChatRoomRepository } from "../repositories/IChatRoomRepository";
 
 @injectable()
 class CreateChatRoomUseCase {

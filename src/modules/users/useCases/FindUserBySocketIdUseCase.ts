@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
-import { User } from "../../infra/typeorm/entities/User";
-import { IUserRepository } from "../../repositories/IUserRepository";
+import { User } from "../infra/typeorm/entities/User";
+import { IUserRepository } from "../repositories/IUserRepository";
 
 @injectable()
 class FindUserBySocketIdUseCase {
