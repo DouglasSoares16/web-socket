@@ -55,8 +55,6 @@ io.on("connect", (socket) => {
       ]);
     }
 
-    console.log(room);
-
     callback(room);
   });
 });
