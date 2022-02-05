@@ -1,4 +1,4 @@
-import { getRepository, Repository, In } from "typeorm";
+import { getRepository, In, Repository } from "typeorm";
 import { IChatRoomRepository } from "../../../repositories/IChatRoomRepository";
 import { ChatRoom } from "../entities/ChatRoom";
 
@@ -11,10 +11,14 @@ class ChatRoomRepository implements IChatRoomRepository {
   }
 
   async findOne(users_id: string[]): Promise<ChatRoom> {
+    const option_1 = [users_id[0], users_id[1]];
+    const option_2 = [users_id[1], users_id[0]];
+
     const room = await this.repository.findOne({
-      where: {
-        users_id
-      }
+      where: [
+        { users_id: option_1 },
+        { users_id: option_2 }
+      ]
     });
 
     return room;
