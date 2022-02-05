@@ -10,6 +10,17 @@ class MessageRepository implements IMessageRepository {
     this.repository = getRepository(Message);
   }
 
+  async findMessagesByRoom(room_id: string): Promise<Message[]> {
+    const messages = await this.repository.find({
+      where: {
+        room_id,
+      },
+      relations: ["to_user"]
+    });
+
+    return messages;
+  }
+
   async create(data: ICreateMessageDTO): Promise<Message> {
     const message = this.repository.create(data);
 
