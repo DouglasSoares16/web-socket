@@ -42,9 +42,43 @@ function onLoad() {
   });
 
   socket.on("message", (data) => {
-    console.log("Message Data: ", data)
+    addMessage(data);
   });
 }
+
+document.getElementById("users_list").addEventListener("click", (event) => {
+  if (event.target && event.target.matches("li.user_name_list")) {
+    const idUser = event.target.getAttribute("idUser");
+
+    socket.emit("start_chat", { idUser }, (response) => {
+      chatRoomId = response.room.id;
+
+      response.messages.forEach((message) => {
+        const data = {
+          message,
+          user: message.to_user
+        };
+
+        addMessage(data);
+      });
+    });
+  }
+});
+
+document.getElementById("user_message").addEventListener("keypress", (event) => {
+  if (event.key === "Enter") {
+    const message = event.target.value;
+
+    event.target.value = "";
+
+    const data = {
+      message,
+      chatRoomId
+    };
+
+    socket.emit("message", data);
+  }
+});
 
 function addUsers(user) {
   const userList = document.getElementById("users_list");
@@ -64,29 +98,21 @@ function addUsers(user) {
   `;
 }
 
-document.getElementById("users_list").addEventListener("click", (event) => {
-  if (event.target && event.target.matches("li.user_name_list")) {
-    const idUser = event.target.getAttribute("idUser");
+function addMessage(data) {
+  const divMessageUser = document.getElementById("message_user");
 
-    socket.emit("start_chat", { idUser }, (data) => {
-      chatRoomId = data.id;
-    });
-  }
-});
-
-document.getElementById("user_message").addEventListener("keypress", (event) => {
-  if (event.key === "Enter") {
-    const message = event.target.value;
-
-    event.target.value = "";
-
-    const data = {
-      message,
-      chatRoomId
-    };
-
-    socket.emit("message", data);
-  }
-});
+  divMessageUser.innerHTML += `
+    <span class="user_name user_name_date">
+      <img
+        class="img_user"
+        src=${data.user.avatar}
+      />
+      <strong>${data.user.name}</strong>
+      <span>${dayjs(data.user.created_at).format("DD/MM/YYYY HH:mm")}</span>
+    </span>
+    <div class="messages">
+      <span class="chat_message">${data.message.text}</span>
+    </div>`;
+}
 
 onLoad();
