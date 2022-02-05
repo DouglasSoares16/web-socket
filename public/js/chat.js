@@ -47,6 +47,8 @@ function onLoad() {
 }
 
 document.getElementById("users_list").addEventListener("click", (event) => {
+  document.getElementById("message_user").innerHTML = "";
+
   if (event.target && event.target.matches("li.user_name_list")) {
     const idUser = event.target.getAttribute("idUser");
 
