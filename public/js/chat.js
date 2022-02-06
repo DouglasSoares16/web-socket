@@ -42,7 +42,9 @@ function onLoad() {
   });
 
   socket.on("message", (data) => {
-    addMessage(data);
+    if (data.message.room_id === chatRoomId) {
+      addMessage(data);
+    }
   });
 }
 
