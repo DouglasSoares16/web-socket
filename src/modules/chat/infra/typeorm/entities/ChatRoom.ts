@@ -1,6 +1,5 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from "uuid";
-import { User } from "../../../../users/infra/typeorm/entities/User";
 
 @Entity("chat_room")
 class ChatRoom {
@@ -9,10 +8,6 @@ class ChatRoom {
 
   @Column("uuid", { array: true })
   users_id: string[];
-
-  @ManyToMany(() => User)
-  @JoinTable()
-  users: User[];
 
   constructor() {
     if (!this.id) {
