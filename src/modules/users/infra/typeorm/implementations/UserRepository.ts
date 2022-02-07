@@ -1,5 +1,6 @@
 import { getRepository, Repository } from "typeorm";
 import { ICreateUserDTO } from "../../../dtos/ICreateUserDTO";
+import { IFindByUsersDTO } from "../../../dtos/IFindByUsersDTO";
 import { IUserRepository } from "../../../repositories/IUserRepository";
 import { User } from "../entities/User";
 
@@ -8,6 +9,22 @@ class UserRepository implements IUserRepository {
 
   constructor() {
     this.repository = getRepository(User);
+  }
+
+  async findByUsers({ user_one, user_two }: IFindByUsersDTO): Promise<User[]> {
+    const one = await this.repository.findOne({
+      where: {
+        id: user_one,
+      }
+    });
+
+    const two = await this.repository.findOne({
+      where: {
+        id: user_two
+      }
+    });
+
+    return [one, two];
   }
 
   async findUserBySocket(socket_id: string): Promise<User> {
