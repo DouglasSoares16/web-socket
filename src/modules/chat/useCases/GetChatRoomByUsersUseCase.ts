@@ -10,7 +10,7 @@ class GetChatRoomByUsersUseCase {
   ) {}
 
   async execute(users_id: string[]): Promise<ChatRoom> {
-    const room = await this.chatRoomRepository.findOne(users_id);
+    const room = await this.chatRoomRepository.findByUsers(users_id);
 
     return room;
   }
